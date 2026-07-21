@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import sqlite3
 
 app = Flask(__name__)
@@ -81,6 +81,36 @@ def get_task(id):
         return jsonify({"error": "Task not found"}), 404
 
     return jsonify(dict(task))
+
+@app.route("/tasks", methods=["POST"])
+def create_task():
+    data = request.get_json()
+
+    if not data or "title" not in data:
+        return jsonify({"error": "Title is required"}), 400
+
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO tasks (title, done) VALUES (?, ?)",
+        (data["title"], False)
+    )
+
+    conn.commit()
+
+    task_id = cursor.lastrowid
+
+    cursor.execute("SELECT * FROM tasks WHERE id = ?", (task_id,))
+    row = cursor.fetchone()
+
+    conn.close()
+
+    return jsonify({
+        "id": row[0],
+        "title": row[1],
+        "done": bool(row[2])
+    }), 201
 
 if __name__ == "__main__":
     init_db()
