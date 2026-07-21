@@ -112,6 +112,62 @@ def create_task():
         "done": bool(row[2])
     }), 201
 
+@app.route("/tasks/<int:id>", methods=["PUT"])
+def update_task(id):
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "Invalid request"}), 400
+
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
+    task = cursor.fetchone()
+
+    if task is None:
+        conn.close()
+        return jsonify({"error": "Task not found"}), 404
+
+    title = data.get("title", task[1])
+    done = data.get("done", task[2])
+
+    cursor.execute(
+        "UPDATE tasks SET title = ?, done = ? WHERE id = ?",
+        (title, done, id)
+    )
+
+    conn.commit()
+
+    cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
+    row = cursor.fetchone()
+
+    conn.close()
+
+    return jsonify({
+        "id": row[0],
+        "title": row[1],
+        "done": bool(row[2])
+    })
+
+@app.route("/tasks/<int:id>", methods=["DELETE"])
+def delete_task(id):
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM tasks WHERE id = ?", (id,))
+    task = cursor.fetchone()
+
+    if task is None:
+        conn.close()
+        return jsonify({"error": "Task not found"}), 404
+
+    cursor.execute("DELETE FROM tasks WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+
+    return "", 204
+
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)
