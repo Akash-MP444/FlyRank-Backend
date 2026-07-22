@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 
@@ -21,9 +21,7 @@ def home():
     return jsonify({
         "name": "Task API",
         "version": "1.0",
-        "endpoints": [
-            "/tasks"
-        ]
+        "endpoints": ["/tasks"]
     })
 
 
@@ -45,9 +43,25 @@ def get_task(task_id):
         if task["id"] == task_id:
             return jsonify(task)
 
-    return jsonify({
-        "error": "Task not found"
-    }), 404
+    return jsonify({"error": "Task not found"}), 404
+
+
+@app.route("/tasks", methods=["POST"])
+def create_task():
+    data = request.get_json()
+
+    if not data or "title" not in data:
+        return jsonify({"error": "Title is required"}), 400
+
+    new_task = {
+        "id": len(tasks) + 1,
+        "title": data["title"],
+        "completed": False
+    }
+
+    tasks.append(new_task)
+
+    return jsonify(new_task), 201
 
 
 if __name__ == "__main__":
