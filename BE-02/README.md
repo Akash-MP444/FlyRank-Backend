@@ -1,17 +1,18 @@
-# FlyRank Backend 
+# FlyRank Backend – BE-02
 
 ## Overview
+This project is a Task Management REST API built using **Flask** and **SQLite**. It supports Create, Read, Update, and Delete (CRUD) operations with persistent task storage using a SQLite database.
 
-This project is a Task Management REST API built using Flask and SQLite. It supports Create, Read, Update, and Delete (CRUD) operations while storing data in a SQLite database.
+---
 
 ## Technologies Used
-
 - Python 3.12
 - Flask
 - SQLite3
 
-## Features
+---
 
+## Features
 - Create a new task
 - View all tasks
 - View a task by ID
@@ -19,39 +20,44 @@ This project is a Task Management REST API built using Flask and SQLite. It supp
 - Delete a task
 - Persistent SQLite database storage
 
+---
+
 ## Project Structure
 
 ```
-BE-01/
+BE-02/
 │── app.py
 │── tasks.db
 │── README.md
+│── requirements.txt
+│── .gitignore
 ```
+
+---
 
 ## Database
 
-Database Name:
-
+**Database Name**
 ```
 tasks.db
 ```
 
-Table:
-
+**Table**
 ```
 tasks
 ```
 
-Columns:
-
+**Columns**
 - id
 - title
 - done
 
+---
+
 ## API Endpoints
 
 | Method | Endpoint | Description |
-|--------|----------|-------------|
+|---------|----------|-------------|
 | GET | / | Home |
 | GET | /health | Health Check |
 | GET | /tasks | Get all tasks |
@@ -60,36 +66,39 @@ Columns:
 | PUT | /tasks/<id> | Update task |
 | DELETE | /tasks/<id> | Delete task |
 
+---
+
 ## Running the Project
 
-Install Flask:
+### Install dependencies
 
 ```bash
-pip install flask
+pip install -r requirements.txt
 ```
 
-Run:
+### Run the application
 
 ```bash
 python app.py
 ```
 
-Server:
+The server will start at:
 
 ```
 http://127.0.0.1:5000
 ```
 
-## Example SQL
+---
+
+## Example SQL Queries
 
 ```sql
 SELECT * FROM tasks;
-```
-
-```sql
 SELECT COUNT(*) FROM tasks;
 ```
 
+---
+
 ## Author
 
-Akash MP
+**Akash MP**
